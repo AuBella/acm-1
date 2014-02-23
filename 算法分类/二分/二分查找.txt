@@ -1,0 +1,21 @@
+
+
+int low=0,high=n,mid;
+while(low<high-1)
+{
+	mid=(low+high)/2;
+	if(check(mid))high=mid;
+	else low=mid;	
+}
+
+
+#include<algorithm>
+#include<iostream>
+using namespace std;
+
+ //  a数组非递减的前提下
+
+  p = lower_bound(a,a+n,v)-a; //返回a[0]到a[n-1]中第一个大于等于v的数的数组下标
+  p = upper_bound(a,a+n,v)-a; //返回a[0]到a[n-1]中第一个大于v的数的数组下标
+  
+  若找不到这样的数则返回n。
