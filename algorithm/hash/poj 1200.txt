@@ -1,0 +1,93 @@
+#include<iostream>
+#include<cstdio>
+#include<map>
+#include<string>
+using namespace std;
+const int MOD = 1000007;
+const int TABLESIZE = 2000000;
+struct HashNode{
+	char s[24];
+	HashNode* next;
+};
+struct HashTable{
+
+	HashNode hash[TABLESIZE],*h[MOD],*cur;
+	void init()
+	{
+		memset(h,0,sizeof(h));
+		cur = hash;
+	}
+	unsigned int BKDRHash(const char *str)
+	{
+		unsigned int seed = 131; // 31 131 1313 13131 131313 etc..
+		unsigned int hash = 0;
+
+		while (*str)
+		{
+			hash = hash * seed + (*str++);
+		}
+
+		return (hash & 0x7FFFFFFF)%MOD;
+	}	
+	int insert(const char* s)
+	{
+		int hv  = BKDRHash(s);
+		HashNode* p = h[hv];
+		while(p)
+		{
+			if(!strcmp(p->s,s))
+				return p-hash;
+			else
+				p = p->next;
+		}
+		strcpy(cur->s,s);
+		cur->next = h[hv];
+		h[hv] = cur++;
+		return cur-1-hash;
+	}
+	int find(const char* s)
+	{
+		int hv = BKDRHash(s);
+		HashNode* p = h[hv];
+		while(p)
+		{
+			if(!strcmp(s,p->s))
+				return p-hash;
+			else
+				p=p->next;
+		}
+		return -1;
+	}
+};
+
+
+HashTable hashtab;
+char s[16000010];
+void solve()
+{
+	hashtab.init();
+	int n,m;
+	scanf("%d%d %s",&n,&m,s);
+	char tmp[1024];
+	int len = strlen(s);
+	int i,j;
+	int ans = 0;
+	for( i=0;i<len-n+1;++i)
+	{
+		for( j=0;j<n;++j)
+		{
+			tmp[j] = s[i+j];
+		}
+		tmp[j]=0;
+		if(hashtab.find(tmp)!=-1)continue;
+		++ans;
+		hashtab.insert(tmp);
+	}
+	printf("%d\n",ans);	
+}
+int main()
+{
+	freopen("in","r",stdin);
+	solve();
+	return 0;
+}
